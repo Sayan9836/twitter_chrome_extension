@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Twitter Topsites",
+  "version": "1.0",
+  "description": "Adds a button to each reply box to open the top URLs from the user's Twitter feed.",
+  "icons": {
+    "128": "/images/icon-128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://twitter.com/*"],
+      "js": ["/scripts/index.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "permissions": ["activeTab", "tabs"]
+}
