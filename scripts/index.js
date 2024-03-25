@@ -1,9 +1,9 @@
-function AddIconToReplyField() {
+function AddIconToReplyButton() {
   const ReplyWrapper = document.querySelector(
     ".public-DraftStyleDefault-block.public-DraftStyleDefault-ltr",
   );
 
-  if (ReplyWrapper.childNodes.length < 2) {
+  if (ReplyWrapper?.childNodes.length < 2) {
     const div = document.createElement("div");
     const img = document.createElement("img");
 
@@ -26,21 +26,27 @@ function AddIconToReplyField() {
     img.style.height = "100%";
     img.style.borderRadius = "50%";
 
-    div.onclick = handleExtensionIconClick;
+    div.onclick = () => handleExtensionIconClick(ReplyWrapper);
 
     ReplyWrapper.appendChild(div);
   }
 }
 
-const handleExtensionIconClick = () => {
-  const tweet_text_container = document.querySelector(
-    "[data-testid=tweetText]",
-  );
+const handleExtensionIconClick = (ReplyWrapper) => {
+  const currUrl = window.location.pathname;
 
-  const childs = tweet_text_container.querySelectorAll("*");
+  let tweet_text_container = document.querySelector("[data-testid=tweetText]");
+
+  if (currUrl.includes("status")) {
+    tweet_text_container = ReplyWrapper?.closest(
+      ".css-175oi2r.r-kemksi.r-184en5c",
+    )?.previousElementSibling.querySelector("[data-testid=tweetText]");
+  }
+
+  const childs = tweet_text_container?.querySelectorAll("*");
   let str = "";
-  childs.forEach((child) => {
-    const link = child.querySelector("a");
+  childs?.forEach((child) => {
+    const link = child?.querySelector("a");
     if (
       child.hasAttribute("target") &&
       child.getAttribute("target") === "_blank"
@@ -50,7 +56,7 @@ const handleExtensionIconClick = () => {
       str += link.textContent;
     } else {
       if (child.nodeName === "SPAN") {
-        child.childNodes.forEach((node) => {
+        child.childNodes?.forEach((node) => {
           if (
             (node.nodeType =
               3 &&
@@ -77,7 +83,7 @@ function copyTextToReplyField(str) {
     ".public-DraftStyleDefault-block.public-DraftStyleDefault-ltr",
   );
 
-  const childElement = ReplyWrapper.childNodes[0].childNodes[0];
+  const childElement = ReplyWrapper?.childNodes[0].childNodes[0];
 
   if (childElement.nodeName !== "BR") {
     childElement.textContent += str;
@@ -113,13 +119,14 @@ const observer = new MutationObserver((mutations) => {
     if (mutation.addedNodes) {
       mutation.addedNodes.forEach((node) => {
         if (
-          node.matches &&
-          node.querySelector(
-            ".public-DraftStyleDefault-block.public-DraftStyleDefault-ltr",
-          ) &&
-          mutation.target.baseURI !== "https://twitter.com/home"
+          (node.matches &&
+            node.querySelector(
+              ".public-DraftStyleDefault-block.public-DraftStyleDefault-ltr",
+            ) &&
+            window.location.pathname.includes("compose/post")) ||
+          window.location.pathname.includes("status")
         ) {
-          AddIconToReplyField();
+          AddIconToReplyButton();
         }
       });
     }
