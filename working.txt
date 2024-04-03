@@ -40,17 +40,9 @@ const handleExtensionIconClick = (ReplyWrapper) => {
   let tweet_text_container = document.querySelector("[data-testid=tweetText]");
 
   if (currUrl.includes("status")) {
-    tweet_text_container =
-      ReplyWrapper?.closest(".css-175oi2r.r-kemksi.r-184en5c") ||
-      ReplyWrapper?.closest(".css-175oi2r.r-yfoy6g.r-184en5c") ||
-      ReplyWrapper?.closest(".css-175oi2r.r-14lw9ot.r-184en5c");
-
-    tweet_text_container =
-      tweet_text_container?.previousElementSibling.querySelector(
-        "[data-testid=tweetText]",
-      );
-
-    console.log(tweet_text_container);
+    tweet_text_container = ReplyWrapper?.closest(
+      ".css-175oi2r.r-kemksi.r-184en5c",
+    )?.previousElementSibling.querySelector("[data-testid=tweetText]");
   }
 
   const childs = tweet_text_container?.querySelectorAll("*");
